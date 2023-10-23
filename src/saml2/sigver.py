@@ -981,15 +981,6 @@ def security_context(conf):
 
         crypto = _get_xmlsec_cryptobackend(xmlsec_binary, delete_tmpfiles=conf.delete_tmpfiles)
 
-        _file_name = conf.getattr("key_file", "")
-        if _file_name:
-            try:
-                rsa_key = import_rsa_key_from_file(_file_name)
-            except Exception as err:
-                logger.error(f"Cannot import key from {_file_name}: {err}")
-                raise
-            else:
-                sec_backend = RSACrypto(rsa_key)
     elif conf.crypto_backend == "XMLSecurity":
         # new and somewhat untested pyXMLSecurity crypto backend.
         crypto = CryptoBackendXMLSecurity()
@@ -997,6 +988,16 @@ def security_context(conf):
         err_msg = "Unknown crypto_backend {backend}"
         err_msg = err_msg.format(backend=conf.crypto_backend)
         raise SigverError(err_msg)
+
+    _file_name = conf.getattr("key_file", "")
+    if _file_name:
+        try:
+            rsa_key = import_rsa_key_from_file(_file_name)
+        except Exception as err:
+            logger.error(f"Cannot import key from {_file_name}: {err}")
+            raise
+        else:
+            sec_backend = RSACrypto(rsa_key)
 
     enc_key_files = []
     if conf.encryption_keypairs is not None:
