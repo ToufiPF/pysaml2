@@ -18,7 +18,7 @@ __author__ = "rolandh"
 
 logger = logging.getLogger(__name__)
 
-ATTR = ["name_qualifier", "sp_name_qualifier", "format", "sp_provided_id", "text"]
+ATTR = ["name_qualifier", "sp_name_qualifier", "sp_provided_id", "text"]
 
 
 class Unknown(SAMLError):
